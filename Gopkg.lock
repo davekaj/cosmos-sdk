@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/aristanetworks/goarista"
+  packages = ["monotime"]
+  revision = "044db260ef3eb4e48c48047618ed6e72188deeb4"
+
+[[projects]]
   name = "github.com/bgentry/speakeasy"
   packages = ["."]
   revision = "4aabc24848ce5fd31929f7d1e4ea74d3709c14cd"
@@ -31,15 +37,26 @@
     "common",
     "common/hexutil",
     "common/math",
+    "common/mclock",
+    "consensus",
+    "consensus/misc",
+    "core",
+    "core/state",
     "core/types",
+    "core/vm",
     "crypto",
+    "crypto/bn256",
+    "crypto/bn256/cloudflare",
+    "crypto/bn256/google",
     "crypto/secp256k1",
     "crypto/sha3",
     "ethdb",
+    "event",
     "log",
     "metrics",
     "params",
     "rlp",
+    "rpc",
     "trie"
   ]
   revision = "b8b9f7f4476a30a0aaf6077daade6ae77f969960"
@@ -124,6 +141,15 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/hashicorp/golang-lru"
+  packages = [
+    ".",
+    "simplelru"
+  ]
+  revision = "0fb14efe8c47ae851c0034ed7a448854d3d34cf3"
+
+[[projects]]
+  branch = "master"
   name = "github.com/hashicorp/hcl"
   packages = [
     ".",
@@ -204,6 +230,12 @@
   name = "github.com/rcrowley/go-metrics"
   packages = ["."]
   revision = "e2704e165165ec55d062f5919b4b29494e9fa790"
+
+[[projects]]
+  name = "github.com/rs/cors"
+  packages = ["."]
+  revision = "feef513b9575b32f84bafa580aad89b011259019"
+  version = "v1.3.0"
 
 [[projects]]
   name = "github.com/spf13/afero"
@@ -408,7 +440,8 @@
     "http2/hpack",
     "idna",
     "internal/timeseries",
-    "trace"
+    "trace",
+    "websocket"
   ]
   revision = "57065200b4b034a1c8ad54ff77069408c2218ae6"
 
@@ -469,10 +502,22 @@
   version = "v1.7.5"
 
 [[projects]]
+  name = "gopkg.in/fatih/set.v0"
+  packages = ["."]
+  revision = "57907de300222151a123d29255ed17f5ed43fad3"
+  version = "v0.1.0"
+
+[[projects]]
   branch = "v2"
   name = "gopkg.in/karalabe/cookiejar.v2"
   packages = ["collections/prque"]
   revision = "8dcd6a7f4951f6ff3ee9cbb919a06d8925822e57"
+
+[[projects]]
+  branch = "v2"
+  name = "gopkg.in/natefinch/npipe.v2"
+  packages = ["."]
+  revision = "c1b8fa8bdccecb0b8db834ee0b92fdbcfa606dd6"
 
 [[projects]]
   name = "gopkg.in/yaml.v2"
@@ -483,6 +528,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "7540d2ecdb5d7d5084ab4e6132e929bbd501bd6add3006d8f08a6b2c127e0c7d"
+  inputs-digest = "d99cd487593affb8c768bb3ad2973fc58c8a46c7d1be6bf99c4b1a1b869ac4d0"
   solver-name = "gps-cdcl"
   solver-version = 1
