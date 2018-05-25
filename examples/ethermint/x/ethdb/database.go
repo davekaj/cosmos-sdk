@@ -4,6 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	eth_ethdb "github.com/ethereum/go-ethereum/ethdb"
+	//might need the low level db, not the merlkized ethdb
 )
 
 type KVDatabase struct {
@@ -38,7 +39,7 @@ func (kvd *KVDatabase) Close() {
 
 type KVBatch struct {
 	underlying sdk.KVStore // Kept only to be able to reset
-	store sdk.CacheKVStore
+	store      sdk.CacheKVStore
 }
 
 func (kvd *KVDatabase) NewBatch() eth_ethdb.Batch {
