@@ -40,16 +40,22 @@ func GetAccountCmd(storeName string, cdc *wire.Codec, decoder auth.AccountDecode
 			// find the key to look up the account
 			addr := args[0]
 
-			key, err := sdk.GetAccAddressBech32Cosmos(addr)
+			key, err := sdk.GetAccAddressBech32(addr)
 			if err != nil {
 				return err
 			}
 
 			// perform query
 			ctx := context.NewCoreContextFromViper()
-			res, err := ctx.Query(key, storeName)
+			res, err := ctx.Query(auth.AddressStoreKey(key), storeName)
 			if err != nil {
 				return err
+			}
+
+			// Check if account was found
+			if res == nil {
+				return sdk.ErrUnknownAddress("No account with address " + addr +
+					" was found in the state.\nAre you sure there has been a transaction involving it?")
 			}
 
 			// decode the value

@@ -10,7 +10,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	tcmd "github.com/tendermint/tendermint/cmd/tendermint/commands"
 	"github.com/tendermint/tendermint/p2p"
-	pvm "github.com/tendermint/tendermint/types/priv_validator"
+	pvm "github.com/tendermint/tendermint/privval"
 )
 
 // ShowNodeIDCmd - ported from Tendermint, dump node ID to stdout
@@ -53,11 +53,11 @@ func ShowValidatorCmd(ctx *Context) *cobra.Command {
 				fmt.Println(string(pubKeyJSONBytes))
 				return nil
 			}
-			addr, err := sdk.Bech32CosmosifyValPub(valPubKey)
+			pubkey, err := sdk.Bech32ifyValPub(valPubKey)
 			if err != nil {
 				return err
 			}
-			fmt.Println(addr)
+			fmt.Println(pubkey)
 			return nil
 		},
 	}

@@ -14,13 +14,17 @@ docs/_build
 # Data - ideally these don't exist
 examples/basecoin/app/data
 baseapp/data/*
+client/lcd/keys/*
 
 # Testing
 coverage.txt
 profile.out
 
-### Vagrant ###
+# Vagrant
 .vagrant/
 *.box
 *.log
 vagrant
+
+# Graphviz
+dependency-graph.png

@@ -2,39 +2,14 @@ package stake
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	abci "github.com/tendermint/abci/types"
 )
 
 const (
-	hrsPerYr  = 8766 // as defined by a julian year of 365.25 days
-	precision = 1000000000
+	hrsPerYr  = 8766         // as defined by a julian year of 365.25 days
+	precision = 100000000000 // increased to this precision for accuracy with tests on tick_test.go
 )
 
 var hrsPerYrRat = sdk.NewRat(hrsPerYr) // as defined by a julian year of 365.25 days
-
-// Tick - called at the end of every block
-func (k Keeper) Tick(ctx sdk.Context) (change []abci.Validator) {
-	p := k.GetPool(ctx)
-
-	// Process Validator Provisions
-	blockTime := ctx.BlockHeader().Time // XXX assuming in seconds, confirm
-	if p.InflationLastTime+blockTime >= 3600 {
-		p.InflationLastTime = blockTime
-		p = k.processProvisions(ctx)
-	}
-
-	// save the params
-	k.setPool(ctx, p)
-
-	// reset the intra-transaction counter
-	k.setIntraTxCounter(ctx, 0)
-
-	// calculate validator set changes
-	change = k.getTendermintUpdates(ctx)
-	k.clearTendermintUpdates(ctx)
-
-	return change
-}
 
 // process provisions for an hour period
 func (k Keeper) processProvisions(ctx sdk.Context) Pool {
@@ -57,7 +32,7 @@ func (k Keeper) nextInflation(ctx sdk.Context) (inflation sdk.Rat) {
 	params := k.GetParams(ctx)
 	pool := k.GetPool(ctx)
 	// The target annual inflation rate is recalculated for each previsions cycle. The
-	// inflation is also subject to a rate change (positive of negative) depending or
+	// inflation is also subject to a rate change (positive or negative) depending on
 	// the distance from the desired ratio (67%). The maximum rate change possible is
 	// defined to be 13% per year, however the annual inflation is capped as between
 	// 7% and 20%.

@@ -18,7 +18,7 @@ const (
 
 // XXX: remove this when not needed
 func todoNotImplemented(_ *cobra.Command, _ []string) error {
-	return errors.New("TODO: Command not yet implemented")
+	return errors.New("todo: Command not yet implemented")
 }
 
 // AddCommands adds a number of rpc-related subcommands
@@ -26,8 +26,6 @@ func AddCommands(cmd *cobra.Command) {
 	cmd.AddCommand(
 		initClientCommand(),
 		statusCommand(),
-		blockCommand(),
-		validatorCommand(),
 	)
 }
 

@@ -11,13 +11,13 @@
   branch = "master"
   name = "github.com/btcsuite/btcd"
   packages = ["btcec"]
-  revision = "1432d294a5b055c297457c25434efbf13384cc46"
+  revision = "86fed781132ac890ee03e906e4ecd5d6fa180c64"
 
 [[projects]]
   branch = "master"
-  name = "github.com/cosmos/bech32cosmos"
-  packages = ["go"]
-  revision = "efca97cd8c0852c44d96dfdcc70565c306eddff0"
+  name = "github.com/btcsuite/btcutil"
+  packages = ["bech32"]
+  revision = "d4cc87b860166d00d6b5b9e0d3b3d71d6088d4d4"
 
 [[projects]]
   name = "github.com/davecgh/go-spew"
@@ -170,8 +170,8 @@
 [[projects]]
   name = "github.com/pelletier/go-toml"
   packages = ["."]
-  revision = "acdc4509485b587f5e675510c4f2c63e90ff68a8"
-  version = "v1.1.0"
+  revision = "c01d1270ff3e442a8a57cddc1c92dc1138598194"
+  version = "v1.2.0"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -197,8 +197,8 @@
     ".",
     "mem"
   ]
-  revision = "63644898a8da0bc22138abf860edaf5277b6102e"
-  version = "v1.1.0"
+  revision = "787d034dfe70e44075ccc060d346146ef53270ad"
+  version = "v1.1.1"
 
 [[projects]]
   name = "github.com/spf13/cast"
@@ -236,8 +236,8 @@
     "assert",
     "require"
   ]
-  revision = "12b6f73e6084dad08a7c6e575284b177ecafbc71"
-  version = "v1.2.1"
+  revision = "f35b8ab0b5a2cef36673838d662e249dd9c94686"
+  version = "v1.2.2"
 
 [[projects]]
   branch = "master"
@@ -256,7 +256,7 @@
     "leveldb/table",
     "leveldb/util"
   ]
-  revision = "e6d6b529196422703d54ff5c40e79809ec2020b3"
+  revision = "e2150783cd35f5b607daca48afd8c57ec54cc995"
 
 [[projects]]
   name = "github.com/tendermint/abci"
@@ -267,8 +267,8 @@
     "server",
     "types"
   ]
-  revision = "78a8905690ef54f9d57e3b2b0ee7ad3a04ef3f1f"
-  version = "v0.10.3"
+  revision = "ebee2fe114020aa49c70bbbae50b7079fc7e7b90"
+  version = "v0.11.0"
 
 [[projects]]
   branch = "master"
@@ -299,16 +299,13 @@
   version = "v0.6.2"
 
 [[projects]]
-  name = "github.com/tendermint/go-wire"
-  packages = ["."]
-  revision = "fa721242b042ecd4c6ed1a934ee740db4f74e45c"
-  version = "v0.7.3"
-
-[[projects]]
   name = "github.com/tendermint/iavl"
-  packages = ["."]
-  revision = "fd37a0fa3a7454423233bc3d5ea828f38e0af787"
-  version = "v0.7.0"
+  packages = [
+    ".",
+    "sha256truncated"
+  ]
+  revision = "c9206995e8f948e99927f5084a88a7e94ca256da"
+  version = "v0.8.0-rc0"
 
 [[projects]]
   name = "github.com/tendermint/tendermint"
@@ -319,6 +316,9 @@
     "consensus",
     "consensus/types",
     "evidence",
+    "libs/events",
+    "libs/pubsub",
+    "libs/pubsub/query",
     "lite",
     "lite/client",
     "lite/errors",
@@ -330,6 +330,7 @@
     "p2p/conn",
     "p2p/pex",
     "p2p/upnp",
+    "privval",
     "proxy",
     "rpc/client",
     "rpc/core",
@@ -344,16 +345,17 @@
     "state/txindex/kv",
     "state/txindex/null",
     "types",
-    "types/priv_validator",
     "version"
   ]
-  revision = "018e096748bafe1d2d1e69b909e4158f3b26f6b2"
-  version = "v0.19.5-rc1"
+  revision = "27bd1deabe4ba6a2d9b463b8f3e3f1e31b993e61"
+  version = "v0.20.0"
 
 [[projects]]
+  branch = "develop"
   name = "github.com/tendermint/tmlibs"
   packages = [
     "autofile",
+    "bech32",
     "cli",
     "cli/flags",
     "clist",
@@ -362,11 +364,9 @@
     "flowrate",
     "log",
     "merkle",
-    "pubsub",
-    "pubsub/query"
+    "merkle/tmhash"
   ]
-  revision = "cc5f287c4798ffe88c04d02df219ecb6932080fd"
-  version = "v0.8.3-rc0"
+  revision = "0c98d10b4ffbd87978d79c160e835b3d3df241ec"
 
 [[projects]]
   branch = "master"
@@ -382,7 +382,7 @@
     "ripemd160",
     "salsa20/salsa"
   ]
-  revision = "1a580b3eff7814fc9b40602fd35256c63b50f491"
+  revision = "8ac0e0d97ce45cd83d1d7243c060cb8461dda5e9"
 
 [[projects]]
   branch = "master"
@@ -396,13 +396,13 @@
     "internal/timeseries",
     "trace"
   ]
-  revision = "57065200b4b034a1c8ad54ff77069408c2218ae6"
+  revision = "db08ff08e8622530d9ed3a0e8ac279f6d4c02196"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "7c87d13f8e835d2fb3a70a2912c811ed0c1d241b"
+  revision = "bff228c7b664c5fce602223a05fb708fd8654986"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -463,6 +463,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "f0c6224dc5f30c1a7dea716d619665831ea0932b0eb9afc6ac897dbc459134fa"
+  inputs-digest = "31f69b235b2d8f879a215c9e8ca0919adc62d21f6830b17931a3a0efb058721f"
   solver-name = "gps-cdcl"
   solver-version = 1
