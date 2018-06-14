@@ -1,8 +1,6 @@
 package stake
 
 import (
-	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -105,33 +103,15 @@ func (s PoolShares) ToUnbonding(p Pool) PoolShares {
 // equivalent amount of shares if the shares were bonded
 func (s PoolShares) ToBonded(p Pool) PoolShares {
 	var amount sdk.Rat
-	var amount1 sdk.Rat
 	switch s.Status {
 	case sdk.Bonded:
-		amount1 = s.Amount
-		fmt.Println("bNON-PRE: ", amount1) // ubshr*bshr/ubshr = bshr
-
 		amount = s.Amount.Round(precision)
-		fmt.Println("PRE: ", amount) // ubshr*bshr/ubshr = bshr
-
 	case sdk.Unbonding:
 		exRate := p.unbondingShareExRate().Quo(p.bondedShareExRate()) // (tok/ubshr)/(tok/bshr) = bshr/ubshr
-		amount1 = s.Amount.Mul(exRate)
-		fmt.Println("uuNON-PRE: ", amount1) // ubshr*bshr/ubshr = bshr
-
-		amount = s.Amount.Mul(exRate).Round(precision) // ubshr*bshr/ubshr = bshr
-		fmt.Println("PRE: ", amount)                   // ubshr*bshr/ubshr = bshr
-
+		amount = s.Amount.Mul(exRate).Round(precision)                // ubshr*bshr/ubshr = bshr
 	case sdk.Unbonded:
 		exRate := p.unbondedShareExRate().Quo(p.bondedShareExRate()) // (tok/ubshr)/(tok/bshr) = bshr/ubshr
-		amount1 = s.Amount.Mul(exRate)
-
-		fmt.Println("uNON-PRE: ", amount1) // ubshr*bshr/ubshr = bshr
-
-		amount = s.Amount.Mul(exRate).Round(precision)
-		// amount2 := amount.Round(precision)
-		fmt.Println("PRE: ", amount) // ubshr*bshr/ubshr = bshr
-		// ubshr*bshr/ubshr = bshr
+		amount = s.Amount.Mul(exRate).Round(precision)               // ubshr*bshr/ubshr = bshr
 	}
 	return NewUnbondedShares(amount)
 }
