@@ -1,6 +1,8 @@
 package stake
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -74,12 +76,12 @@ func (s PoolShares) ToUnbonded(p Pool) PoolShares {
 	switch s.Status {
 	case sdk.Bonded:
 		exRate := p.bondedShareExRate().Quo(p.unbondedShareExRate()) // (tok/bondedshr)/(tok/unbondedshr) = unbondedshr/bondedshr
-		amount = s.Amount.Mul(exRate)                                // bondedshr*unbondedshr/bondedshr = unbondedshr
+		amount = s.Amount.Mul(exRate).Round(precision)               // bondedshr*unbondedshr/bondedshr = unbondedshr
 	case sdk.Unbonding:
 		exRate := p.unbondingShareExRate().Quo(p.unbondedShareExRate()) // (tok/unbondingshr)/(tok/unbondedshr) = unbondedshr/unbondingshr
-		amount = s.Amount.Mul(exRate)                                   // unbondingshr*unbondedshr/unbondingshr = unbondedshr
+		amount = s.Amount.Mul(exRate).Round(precision)                  // unbondingshr*unbondedshr/unbondingshr = unbondedshr
 	case sdk.Unbonded:
-		amount = s.Amount
+		amount = s.Amount.Round(precision)
 	}
 	return NewUnbondedShares(amount)
 }
@@ -90,12 +92,12 @@ func (s PoolShares) ToUnbonding(p Pool) PoolShares {
 	switch s.Status {
 	case sdk.Bonded:
 		exRate := p.bondedShareExRate().Quo(p.unbondingShareExRate()) // (tok/bondedshr)/(tok/unbondingshr) = unbondingshr/bondedshr
-		amount = s.Amount.Mul(exRate)                                 // bondedshr*unbondingshr/bondedshr = unbondingshr
+		amount = s.Amount.Mul(exRate).Round(precision)                // bondedshr*unbondingshr/bondedshr = unbondingshr
 	case sdk.Unbonding:
-		amount = s.Amount
+		amount = s.Amount.Round(precision)
 	case sdk.Unbonded:
 		exRate := p.unbondedShareExRate().Quo(p.unbondingShareExRate()) // (tok/unbondedshr)/(tok/unbondingshr) = unbondingshr/unbondedshr
-		amount = s.Amount.Mul(exRate)                                   // unbondedshr*unbondingshr/unbondedshr = unbondingshr
+		amount = s.Amount.Mul(exRate).Round(precision)                  // unbondedshr*unbondingshr/unbondedshr = unbondingshr
 	}
 	return NewUnbondingShares(amount)
 }
@@ -103,15 +105,33 @@ func (s PoolShares) ToUnbonding(p Pool) PoolShares {
 // equivalent amount of shares if the shares were bonded
 func (s PoolShares) ToBonded(p Pool) PoolShares {
 	var amount sdk.Rat
+	var amount1 sdk.Rat
 	switch s.Status {
 	case sdk.Bonded:
-		amount = s.Amount
+		amount1 = s.Amount
+		fmt.Println("bNON-PRE: ", amount1) // ubshr*bshr/ubshr = bshr
+
+		amount = s.Amount.Round(precision)
+		fmt.Println("PRE: ", amount) // ubshr*bshr/ubshr = bshr
+
 	case sdk.Unbonding:
 		exRate := p.unbondingShareExRate().Quo(p.bondedShareExRate()) // (tok/ubshr)/(tok/bshr) = bshr/ubshr
-		amount = s.Amount.Mul(exRate)                                 // ubshr*bshr/ubshr = bshr
+		amount1 = s.Amount.Mul(exRate)
+		fmt.Println("uuNON-PRE: ", amount1) // ubshr*bshr/ubshr = bshr
+
+		amount = s.Amount.Mul(exRate).Round(precision) // ubshr*bshr/ubshr = bshr
+		fmt.Println("PRE: ", amount)                   // ubshr*bshr/ubshr = bshr
+
 	case sdk.Unbonded:
 		exRate := p.unbondedShareExRate().Quo(p.bondedShareExRate()) // (tok/ubshr)/(tok/bshr) = bshr/ubshr
-		amount = s.Amount.Mul(exRate)                                // ubshr*bshr/ubshr = bshr
+		amount1 = s.Amount.Mul(exRate)
+
+		fmt.Println("uNON-PRE: ", amount1) // ubshr*bshr/ubshr = bshr
+
+		amount = s.Amount.Mul(exRate).Round(precision)
+		// amount2 := amount.Round(precision)
+		fmt.Println("PRE: ", amount) // ubshr*bshr/ubshr = bshr
+		// ubshr*bshr/ubshr = bshr
 	}
 	return NewUnbondedShares(amount)
 }
@@ -123,11 +143,11 @@ func (s PoolShares) ToBonded(p Pool) PoolShares {
 func (s PoolShares) Tokens(p Pool) sdk.Rat {
 	switch s.Status {
 	case sdk.Bonded:
-		return p.bondedShareExRate().Mul(s.Amount) // (tokens/shares) * shares
+		return p.bondedShareExRate().Mul(s.Amount).Round(precision) // (tokens/shares) * shares
 	case sdk.Unbonding:
-		return p.unbondingShareExRate().Mul(s.Amount)
+		return p.unbondingShareExRate().Mul(s.Amount).Round(precision)
 	case sdk.Unbonded:
-		return p.unbondedShareExRate().Mul(s.Amount)
+		return p.unbondedShareExRate().Mul(s.Amount).Round(precision)
 	default:
 		panic("unknown share kind")
 	}

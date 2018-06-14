@@ -169,7 +169,7 @@ func (v Validator) removePoolShares(pool Pool, poolShares sdk.Rat) (Validator, P
 	case sdk.Bonded:
 		pool, tokens = pool.removeSharesBonded(poolShares)
 	}
-	v.PoolShares.Amount = v.PoolShares.Amount.Sub(poolShares)
+	v.PoolShares.Amount = v.PoolShares.Amount.Sub(poolShares).Round(precision)
 	return v, pool, tokens
 }
 
@@ -201,11 +201,11 @@ func (v Validator) addTokensFromDel(pool Pool,
 	case sdk.Bonded:
 		pool, poolShares = pool.addTokensBonded(amount)
 	}
-	v.PoolShares.Amount = v.PoolShares.Amount.Add(poolShares.Amount)
+	v.PoolShares.Amount = v.PoolShares.Amount.Add(poolShares.Amount).Round(precision)
 	equivalentBondedShares = poolShares.ToBonded(pool).Amount
 
-	issuedDelegatorShares = equivalentBondedShares.Quo(exRate) // bshr/(bshr/delshr) = delshr
-	v.DelegatorShares = v.DelegatorShares.Add(issuedDelegatorShares)
+	issuedDelegatorShares = equivalentBondedShares.Quo(exRate).Round(precision) // bshr/(bshr/delshr) = delshr
+	v.DelegatorShares = v.DelegatorShares.Add(issuedDelegatorShares).Round(precision)
 
 	return v, pool, issuedDelegatorShares
 }
@@ -223,14 +223,14 @@ func (v Validator) removeDelShares(pool Pool,
 	case sdk.Unbonded:
 		unbondedShares := eqBondedSharesToRemove.ToUnbonded(pool).Amount
 		pool, createdCoins = pool.removeSharesUnbonded(unbondedShares)
-		v.PoolShares.Amount = v.PoolShares.Amount.Sub(unbondedShares)
+		v.PoolShares.Amount = v.PoolShares.Amount.Sub(unbondedShares).Round(precision)
 	case sdk.Unbonding:
 		unbondingShares := eqBondedSharesToRemove.ToUnbonding(pool).Amount
 		pool, createdCoins = pool.removeSharesUnbonding(unbondingShares)
-		v.PoolShares.Amount = v.PoolShares.Amount.Sub(unbondingShares)
+		v.PoolShares.Amount = v.PoolShares.Amount.Sub(unbondingShares).Round(precision)
 	case sdk.Bonded:
 		pool, createdCoins = pool.removeSharesBonded(eqBondedSharesToRemove.Amount)
-		v.PoolShares.Amount = v.PoolShares.Amount.Sub(eqBondedSharesToRemove.Amount)
+		v.PoolShares.Amount = v.PoolShares.Amount.Sub(eqBondedSharesToRemove.Amount).Round(precision)
 	}
 	return v, pool, createdCoins
 }

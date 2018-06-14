@@ -197,6 +197,7 @@ func handleMsgUnbond(ctx sdk.Context, msg MsgUnbond, k Keeper) sdk.Result {
 		if err != nil {
 			return err.Result()
 		}
+		delShares = delShares.Round(precision)
 		if bond.Shares.LT(delShares) {
 			return ErrNotEnoughBondShares(k.codespace, msg.Shares).Result()
 		}
@@ -218,7 +219,7 @@ func handleMsgUnbond(ctx sdk.Context, msg MsgUnbond, k Keeper) sdk.Result {
 	}
 
 	// subtract bond tokens from delegator bond
-	bond.Shares = bond.Shares.Sub(delShares)
+	bond.Shares = bond.Shares.Sub(delShares).Round(precision)
 
 	// remove the bond
 	revokeValidator := false

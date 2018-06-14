@@ -330,7 +330,7 @@ func checkValidatorSetup(t *testing.T, pool Pool, initialTotalTokens, initialBon
 
 	// test initial bonded ratio
 	assert.True(t, pool.bondedRatio().Equal(sdk.NewRat(initialBondedTokens, initialTotalTokens)), "%v", pool.bondedRatio())
-	// test the value of validator shares
+	// test the value of validator shares (assuming setup always starts with equal bond to share ratio i.e. sdk.OneRat())
 	assert.True(t, pool.bondedShareExRate().Equal(sdk.OneRat()), "%v", pool.bondedShareExRate())
 }
 

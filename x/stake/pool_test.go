@@ -16,7 +16,7 @@ func TestBondedRatio(t *testing.T) {
 	pool.BondedTokens = 2
 
 	// bonded pool / total supply
-	require.Equal(t, pool.bondedRatio(), sdk.NewRat(2).Quo(sdk.NewRat(3)))
+	require.Equal(t, pool.bondedRatio(), sdk.NewRat(2).Quo(sdk.NewRat(3)).Round(precision))
 
 	// avoids divide-by-zero
 	pool.LooseUnbondedTokens = 0
@@ -75,7 +75,7 @@ func TestAddTokensBonded(t *testing.T) {
 	assert.Equal(t, poolB.bondedShareExRate(), sdk.OneRat())
 
 	// correct changes to bonded shares and bonded pool
-	assert.Equal(t, poolB.BondedShares, poolA.BondedShares.Add(sharesB.Amount))
+	assert.Equal(t, poolB.BondedShares, poolA.BondedShares.Add(sharesB.Amount).Round(precision))
 	assert.Equal(t, poolB.BondedTokens, poolA.BondedTokens+10)
 
 	// same number of bonded shares / tokens when exchange rate is one
@@ -91,7 +91,7 @@ func TestRemoveSharesBonded(t *testing.T) {
 	assert.Equal(t, poolB.bondedShareExRate(), sdk.OneRat())
 
 	// correct changes to bonded shares and bonded pool
-	assert.Equal(t, poolB.BondedShares, poolA.BondedShares.Sub(sdk.NewRat(10)))
+	assert.Equal(t, poolB.BondedShares, poolA.BondedShares.Sub(sdk.NewRat(10)).Round(precision))
 	assert.Equal(t, poolB.BondedTokens, poolA.BondedTokens-tokensB)
 
 	// same number of bonded shares / tokens when exchange rate is one
@@ -107,7 +107,7 @@ func TestAddTokensUnbonded(t *testing.T) {
 	assert.Equal(t, poolB.unbondedShareExRate(), sdk.OneRat())
 
 	// correct changes to unbonded shares and unbonded pool
-	assert.Equal(t, poolB.UnbondedShares, poolA.UnbondedShares.Add(sharesB.Amount))
+	assert.Equal(t, poolB.UnbondedShares, poolA.UnbondedShares.Add(sharesB.Amount).Round(precision))
 	assert.Equal(t, poolB.UnbondedTokens, poolA.UnbondedTokens+10)
 
 	// same number of unbonded shares / tokens when exchange rate is one
@@ -123,7 +123,7 @@ func TestRemoveSharesUnbonded(t *testing.T) {
 	assert.Equal(t, poolB.unbondedShareExRate(), sdk.OneRat())
 
 	// correct changes to unbonded shares and bonded pool
-	assert.Equal(t, poolB.UnbondedShares, poolA.UnbondedShares.Sub(sdk.NewRat(10)))
+	assert.Equal(t, poolB.UnbondedShares, poolA.UnbondedShares.Sub(sdk.NewRat(10)).Round(precision))
 	assert.Equal(t, poolB.UnbondedTokens, poolA.UnbondedTokens-tokensB)
 
 	// same number of unbonded shares / tokens when exchange rate is one

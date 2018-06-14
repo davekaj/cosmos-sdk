@@ -82,7 +82,7 @@ func TestRemoveShares(t *testing.T) {
 	// coins were created
 	assert.Equal(t, coinsB, int64(10))
 	// pool shares were removed
-	assert.Equal(t, valB.PoolShares.Bonded(), valA.PoolShares.Bonded().Sub(sdk.NewRat(10).Mul(valA.DelegatorShareExRate(poolA))))
+	assert.Equal(t, valB.PoolShares.Bonded(), valA.PoolShares.Bonded().Sub(sdk.NewRat(10).Mul(valA.DelegatorShareExRate(poolA))).Round(precision))
 	// conservation of tokens
 	assert.Equal(t, poolB.UnbondedTokens+poolB.BondedTokens+coinsB, poolA.UnbondedTokens+poolA.BondedTokens)
 

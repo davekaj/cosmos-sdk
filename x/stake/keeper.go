@@ -806,7 +806,7 @@ func (k Keeper) Slash(ctx sdk.Context, pubkey crypto.PubKey, height int64, fract
 	if !found {
 		panic(fmt.Errorf("Attempted to slash a nonexistent validator with address %s", pubkey.Address()))
 	}
-	sharesToRemove := val.PoolShares.Amount.Mul(fraction)
+	sharesToRemove := val.PoolShares.Amount.Mul(fraction).Round(precision)
 	pool := k.GetPool(ctx)
 	val, pool, burned := val.removePoolShares(pool, sharesToRemove)
 	k.setPool(ctx, pool)        // update the pool
