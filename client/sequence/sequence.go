@@ -34,6 +34,7 @@ func GetSequenceStoreFromDir(rootDir string) (dbm.DB, error) {
 
 func GetLocalSequence(account string) (int64, error) {
 	ss, err := GetSequenceStore()
+	defer ss.Close()
 	if err != nil {
 		return 0, err
 	}
@@ -42,22 +43,22 @@ func GetLocalSequence(account string) (int64, error) {
 		return 0, err
 	}
 	sequenceInt := bytes2Int64(sequenceBytes)
-	ss.Close()
 	return sequenceInt, nil
 
 }
 
 func SetLocalSequence(account string, newSequence int64) {
 	ss, err := GetSequenceStore()
+	defer ss.Close()
 	if err != nil {
 		fmt.Println("errorB: ", err)
 	}
 	ss.Set(stringToByteArray(account), int642Bytes(newSequence))
-	ss.Close()
 }
 
 func HasLocalSequence(account string) (bool, error) {
 	ss, err := GetSequenceStore()
+	defer ss.Close()
 	if err != nil {
 		return false, err
 	}
@@ -65,7 +66,6 @@ func HasLocalSequence(account string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	ss.Close()
 	return isStored, nil
 }
 
