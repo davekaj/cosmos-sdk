@@ -14,6 +14,7 @@ import (
 
 	"github.com/tendermint/go-crypto/keys"
 	"github.com/tendermint/tmlibs/cli"
+	"github.com/cosmos/cosmos-sdk/client/sequence"
 )
 
 const (
@@ -97,6 +98,7 @@ func runAddCmd(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return err
 		}
+		sequence.SetLocalSequence(name, 0)
 		printCreate(info, seed)
 	}
 	return nil
