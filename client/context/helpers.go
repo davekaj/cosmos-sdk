@@ -30,6 +30,7 @@ func (ctx CoreContext) BroadcastTx(tx []byte) (*ctypes.ResultBroadcastTxCommit, 
 	if err != nil {
 		return res, err
 	}
+	fmt.Println("HHHHHHHHHHHHH", err)
 
 	if res.CheckTx.Code != uint32(0) {
 		return res, errors.Errorf("checkTx failed: (%d) %s",
@@ -192,7 +193,6 @@ func (ctx CoreContext) EnsureSignBuildBroadcast(name string, msgs []sdk.Msg, cdc
 	if err != nil {
 		return nil, err
 	}
-
 	txBytes, err := ctx.SignAndBuild(name, passphrase, msgs, cdc)
 	if err != nil {
 		return nil, err

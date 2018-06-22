@@ -63,6 +63,7 @@ func SendTxCmd(cdc *wire.Codec) *cobra.Command {
 				return nil
 			} else {
 				res, err := ctx.EnsureSignBuildBroadcast(ctx.FromAddressName, []sdk.Msg{msg}, cdc)
+				fmt.Println("ERERERERERER: ", err)
 				if err != nil {
 					// Check to see if the local sequence isn't in sync with the sequence stored on tendermint
 					// If it isn't in sync, update them to match, and try the Tx again
