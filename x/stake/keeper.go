@@ -618,6 +618,13 @@ func (k Keeper) setNewParams(ctx sdk.Context, params Params) {
 	store.Set(ParamKey, b)
 }
 
+// Public version of setNewParams
+func (k Keeper) SetNewParams(ctx sdk.Context, params Params) {
+	store := ctx.KVStore(k.storeKey)
+	b := k.cdc.MustMarshalBinary(params)
+	store.Set(ParamKey, b)
+}
+
 func (k Keeper) setParams(ctx sdk.Context, params Params) {
 	store := ctx.KVStore(k.storeKey)
 	exParams := k.getParams(store)
@@ -647,6 +654,13 @@ func (k Keeper) getPool(store sdk.KVStore) (pool Pool) {
 }
 
 func (k Keeper) setPool(ctx sdk.Context, pool Pool) {
+	store := ctx.KVStore(k.storeKey)
+	b := k.cdc.MustMarshalBinary(pool)
+	store.Set(PoolKey, b)
+}
+
+// Public version of setpool
+func (k Keeper) SetPool(ctx sdk.Context, pool Pool) {
 	store := ctx.KVStore(k.storeKey)
 	b := k.cdc.MustMarshalBinary(pool)
 	store.Set(PoolKey, b)
@@ -777,8 +791,13 @@ func (k Keeper) Delegation(ctx sdk.Context, addrDel sdk.Address, addrVal sdk.Add
 	return bond
 }
 
+// Returns self as it is both a validatorset and delegationset
+func (k Keeper) GetValidatorSet() sdk.ValidatorSet {
+	return k
+}
+
 // iterate through the active validator set and perform the provided function
-func (k Keeper) IterateDelegators(ctx sdk.Context, delAddr sdk.Address, fn func(index int64, delegation sdk.Delegation) (stop bool)) {
+func (k Keeper) IterateDelegations(ctx sdk.Context, delAddr sdk.Address, fn func(index int64, delegation sdk.Delegation) (stop bool)) {
 	store := ctx.KVStore(k.storeKey)
 	key := GetDelegationsKey(delAddr, k.cdc)
 	iterator := sdk.KVStorePrefixIterator(store, key)
@@ -809,7 +828,7 @@ func (k Keeper) Slash(ctx sdk.Context, pubkey crypto.PubKey, height int64, fract
 	val, pool, burned := val.removePoolShares(pool, sharesToRemove)
 	k.setPool(ctx, pool)        // update the pool
 	k.updateValidator(ctx, val) // update the validator, possibly kicking it out
-	logger.Info(fmt.Sprintf("Validator %s slashed by fraction %v, removed %v shares and burned %d tokens", pubkey.Address(), fraction, sharesToRemove, burned))
+	logger.Info(fmt.Sprintf("Validator %s slashed by fraction %v, removed %v shares and burned %v tokens", pubkey.Address(), fraction, sharesToRemove, burned))
 	return
 }
 

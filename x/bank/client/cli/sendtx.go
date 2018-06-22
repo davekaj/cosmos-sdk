@@ -53,7 +53,7 @@ func SendTxCmd(cdc *wire.Codec) *cobra.Command {
 			asyncStr := viper.GetString(flagAsync)
 
 			if asyncStr == "true" {
-				res, err := ctx.SignBuildBroadcastAsync(ctx.FromAddressName, msg, cdc)
+				res, err := ctx.SignBuildBroadcastAsync(ctx.FromAddressName, []sdk.Msg{msg}, cdc)
 				if err != nil {
 					return err
 				}
@@ -62,7 +62,7 @@ func SendTxCmd(cdc *wire.Codec) *cobra.Command {
 				fmt.Println("Async tx send. tx hash: ", res.Hash)
 				return nil
 			} else {
-				res, err := ctx.EnsureSignBuildBroadcast(ctx.FromAddressName, msg, cdc)
+				res, err := ctx.EnsureSignBuildBroadcast(ctx.FromAddressName, []sdk.Msg{msg}, cdc)
 				if err != nil {
 					// Check to see if the local sequence isn't in sync with the sequence stored on tendermint
 					// If it isn't in sync, update them to match, and try the Tx again
@@ -80,7 +80,7 @@ func SendTxCmd(cdc *wire.Codec) *cobra.Command {
 						fmt.Printf("The local account sequence did not match the sequence stored on the blockchain. Updated local sequence to : %d\n", seq)
 						fmt.Println("Attempting to send tx with updated sequence")
 						sequence.SetLocalSequence(ctx.FromAddressName, seq)
-						res, err = ctx.EnsureSignBuildBroadcast(ctx.FromAddressName, msg, cdc)
+						res, err = ctx.EnsureSignBuildBroadcast(ctx.FromAddressName, []sdk.Msg{msg}, cdc)
 						if err != nil {
 							return err
 						}
