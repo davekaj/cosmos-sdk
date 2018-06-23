@@ -48,10 +48,11 @@ func SetKeyBase(kb keys.Keybase) {
 
 // used for outputting keys.Info over REST
 type KeyOutput struct {
-	Name    string `json:"name"`
-	Address string `json:"address"`
-	PubKey  string `json:"pub_key"`
-	Seed    string `json:"seed,omitempty"`
+	Name     string `json:"name"`
+	Address  string `json:"address"`
+	PubKey   string `json:"pub_key"`
+	Seed     string `json:"seed,omitempty"`
+	Sequence int    `json:"sequence"`
 }
 
 // create a list of KeyOutput in bech32 format
@@ -78,9 +79,10 @@ func Bech32KeyOutput(info keys.Info) (KeyOutput, error) {
 		return KeyOutput{}, err
 	}
 	return KeyOutput{
-		Name:    info.Name,
-		Address: bechAccount,
-		PubKey:  bechPubKey,
+		Name:     info.Name,
+		Address:  bechAccount,
+		PubKey:   bechPubKey,
+		Sequence: info.Sequence,
 	}, nil
 }
 
@@ -91,7 +93,7 @@ func printInfo(info keys.Info) {
 	}
 	switch viper.Get(cli.OutputFlag) {
 	case "text":
-		fmt.Printf("NAME:\tADDRESS:\t\t\t\t\t\tPUBKEY:\n")
+		fmt.Printf("NAME:\tADDRESS:\t\t\t\t\t\tPUBKEY:\t\t\t\t\t\t\t\t\t\t\tSEQUENCE:\n")
 		printKeyOutput(ko)
 	case "json":
 		out, err := MarshalJSON(ko)
@@ -109,7 +111,7 @@ func printInfos(infos []keys.Info) {
 	}
 	switch viper.Get(cli.OutputFlag) {
 	case "text":
-		fmt.Printf("NAME:\tADDRESS:\t\t\t\t\t\tPUBKEY:\n")
+		fmt.Printf("NAME:\tADDRESS:\t\t\t\t\t\tPUBKEY:\t\t\t\t\t\t\t\t\t\t\tSEQUENCE:\n")
 		for _, ko := range kos {
 			printKeyOutput(ko)
 		}
@@ -123,5 +125,5 @@ func printInfos(infos []keys.Info) {
 }
 
 func printKeyOutput(ko KeyOutput) {
-	fmt.Printf("%s\t%s\t%s\n", ko.Name, ko.Address, ko.PubKey)
+	fmt.Printf("%s\t%s\t%s\t\t%d\n", ko.Name, ko.Address, ko.PubKey, ko.Sequence)
 }
